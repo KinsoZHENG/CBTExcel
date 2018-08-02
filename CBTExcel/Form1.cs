@@ -20,6 +20,8 @@ namespace CBTExcel
         public Form1()
         {
             InitializeComponent();
+            textBox2.Text = "运行前提醒：请将选择的文件关闭！ " +
+                "否则软件将不运行！";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -114,15 +116,17 @@ namespace CBTExcel
                     sheetNew.CreateRow(newRow);     // 新建一行 分开每家店铺
                     newRow++;
                 }
-                FileStream fileOut = new FileStream(@"Y:\\赤坂亭\\"+string.Format("{0:M}", dt)+@".xls", FileMode.Create);
+                FileStream fileOut = new FileStream(textBox3.Text + @"\\"+string.Format("{0:M}", dt)+@".xls", FileMode.Create);     // 将输出路径改为非固定项 地址值由 选择地址文本窗口传来
                 fileStream.Close();
                 workbookIn.Close();
+                MessageBox.Show("今日日期:" + string.Format("{0:M}", dt) + "\n文件地址:"+ textBox3.Text + "\n您的订单已完成，表单正在打开中，请稍等...");     //  设计添加新弹框
+                //MessageBoxButtons.OK.ToString("OK");
                 textBox2.Text = "今日日期:" + string.Format("{0:M}", dt) + "\n您的订单已完成，表单正在打开中，请稍等...";
-                System.Diagnostics.Process.Start(@"Y:\\赤坂亭\\" + string.Format("{0:M}", dt) + @".xls");
+                System.Diagnostics.Process.Start(textBox3.Text);         // 将打开的 输出路径改为非固定项 地址值由 选择地址文本窗口传来
                 //Console.ReadKey();
                 workbookOut.Write(fileOut);
                 workbookOut.Close();
-                Application.Exit();
+                Application.Exit();         // 关闭程序 避免程序占用 输出文件
 
             }
             catch (IOException ex)
@@ -133,7 +137,7 @@ namespace CBTExcel
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -156,6 +160,26 @@ namespace CBTExcel
 
         private void label1_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        /****2018-08-03 添加了文件输出路径****/
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "请选择文件路径";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string foldPath = dialog.SelectedPath;
+                textBox3.Text = foldPath;
+            }
 
         }
     }
