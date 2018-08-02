@@ -58,6 +58,9 @@ namespace CBTExcel
             workbookOut.CreateSheet("Sheet1");                  // 建立新的表单 名称： Sheet1
             HSSFSheet sheetNew = (HSSFSheet)workbookOut.GetSheet("Sheet1");     // 获取 名称：Sheet1 的工作表
 
+            /* 修复 分页预览 无分页的情况*/
+            sheetNew.FitToPage = false;
+
 
             try
             {
@@ -112,13 +115,14 @@ namespace CBTExcel
                     newRow++;
                 }
                 FileStream fileOut = new FileStream(@"Y:\\赤坂亭\\"+string.Format("{0:M}", dt)+@".xls", FileMode.Create);
-                workbookOut.Write(fileOut);
-                workbookOut.Close();
+                fileStream.Close();
+                workbookIn.Close();
                 textBox2.Text = "今日日期:" + string.Format("{0:M}", dt) + "\n您的订单已完成，表单正在打开中，请稍等...";
                 System.Diagnostics.Process.Start(@"Y:\\赤坂亭\\" + string.Format("{0:M}", dt) + @".xls");
                 //Console.ReadKey();
-                fileStream.Close();
-                workbookIn.Close();
+                workbookOut.Write(fileOut);
+                workbookOut.Close();
+                Application.Exit();
 
             }
             catch (IOException ex)
